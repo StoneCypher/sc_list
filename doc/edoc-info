@@ -1,0 +1,4 @@
+%% encoding: UTF-8
+{application,sc_list}.
+{packages,[]}.
+{modules,[sc_list]}.
