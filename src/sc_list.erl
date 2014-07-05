@@ -9,7 +9,8 @@
 
     between/2,
 
-    foldl0/2
+    foldl0/2,
+      foldr0/2
 
 ]).
 
@@ -43,3 +44,11 @@ between(List, Delim) ->
 foldl0(Fun, [Head|Rem]) ->
 
     lists:foldl(Fun, Head, Rem).
+
+
+
+
+
+foldr0(Fun, [Head|Rem]) ->
+
+    lists:foldr(Fun, Head, Rem).
