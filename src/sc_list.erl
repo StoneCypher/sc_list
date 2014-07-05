@@ -12,7 +12,8 @@
     foldl0/2,
       foldr0/2,
 
-    max/1
+    max/1,
+      min/1
 
 ]).
 
@@ -62,3 +63,11 @@ foldr0(Fun, [Head|Rem]) ->
 max([_|_]=List) ->
 
     foldl0(fun(X, Max) when X > Max -> X; (_, Max) -> Max end, List).
+
+
+
+
+
+min([_|_]=List) ->
+
+    foldl0(fun(X, Min) when X < Min -> X; (_, Min) -> Min end, List).
