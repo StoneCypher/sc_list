@@ -10,7 +10,9 @@
     between/2,
 
     foldl0/2,
-      foldr0/2
+      foldr0/2,
+
+    max/1
 
 ]).
 
@@ -52,3 +54,11 @@ foldl0(Fun, [Head|Rem]) ->
 foldr0(Fun, [Head|Rem]) ->
 
     lists:foldr(Fun, Head, Rem).
+
+
+
+
+
+max([_|_]=List) ->
+
+    foldl0(fun(X, Max) when X > Max -> X; (_, Max) -> Max end, List).
