@@ -7,7 +7,9 @@
 
 -export([
 
-    between/2
+    between/2,
+
+    foldl0/2
 
 ]).
 
@@ -33,3 +35,11 @@ between(List, Delim) ->
 
     [_|Rem] = lists:append([ [Delim, L] || L <- List ]),
     Rem.
+
+
+
+
+
+foldl0(Fun, [Head|Rem]) ->
+
+    lists:foldl(Fun, Head, Rem).
