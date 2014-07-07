@@ -74,6 +74,8 @@ between(List, Delim) ->
 %% "(2,(3,(4,(5,1))))"'''
 %%
 %% Unit and doc tested.
+%%
+%% @todo Stochastic match test of foldr0/2 to foldr/3
 
 -spec foldl0(Fun::fun(), List::nonempty_list()) -> any().
 
@@ -108,6 +110,8 @@ foldl0(Fun, [Head|Rem]) ->
 %% "(2,(3,(4,(5,1))))"'''
 %%
 %% Unit and doc tested.
+%%
+%% @todo Stochastic match test of foldr0/2 to foldr/3
 
 -spec foldr0(Fun::fun(), List::nonempty_list()) -> any().
 
