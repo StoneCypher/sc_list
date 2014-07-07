@@ -27,6 +27,8 @@
 %% 2> sc_list:between( [], 0 ).
 %% []'''
 
+-spec between(List::list(), Delim::any()) -> list().
+
 between([],  _Delim) ->
 
     [];
@@ -66,6 +68,8 @@ between(List, Delim) ->
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
 %% "(2,(3,(4,(5,1))))"'''
 
+-spec foldl0(Fun::fun(), List::nonempty_list()) -> any().
+
 foldl0(Fun, [Head|Rem]) ->
 
     lists:foldl(Fun, Head, Rem).
@@ -96,6 +100,8 @@ foldl0(Fun, [Head|Rem]) ->
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
 %% "(2,(3,(4,(5,1))))"'''
 
+-spec foldr0(Fun::fun(), List::nonempty_list()) -> any().
+
 foldr0(Fun, [Head|Rem]) ->
 
     lists:foldr(Fun, Head, Rem).
@@ -113,6 +119,8 @@ foldr0(Fun, [Head|Rem]) ->
 %% 3> sc_list:max( [1, two, 3] ).
 %% two'''
 
+-spec max(Name::nonempty_list()) -> any().
+
 max([_|_]=List) ->
 
     foldl0(fun(X, Max) when X > Max -> X; (_, Max) -> Max end, List).
@@ -121,7 +129,7 @@ max([_|_]=List) ->
 
 
 
-%% @doc Returns the maximum of a non-empty list of values, type-insensitive. ```1> sc_list:min( [1, 2, 3] ).
+%% @doc Returns the minimum of a non-empty list of values, type-insensitive. ```1> sc_list:min( [1, 2, 3] ).
 %% 1
 %%
 %% 2> sc_list:min( [1, 2.0, 3] ).
@@ -129,6 +137,8 @@ max([_|_]=List) ->
 %%
 %% 3> sc_list:min( [one, 2, three] ).
 %% 2'''
+
+-spec min(Name::nonempty_list()) -> any().
 
 min([_|_]=List) ->
 
