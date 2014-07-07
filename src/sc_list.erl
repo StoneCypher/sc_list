@@ -121,6 +121,15 @@ max([_|_]=List) ->
 
 
 
+%% @doc Returns the maximum of a non-empty list of values, type-insensitive. ```1> sc_list:min( [1, 2, 3] ).
+%% 1
+%%
+%% 2> sc_list:min( [1, 2.0, 3] ).
+%% 1
+%%
+%% 3> sc_list:min( [one, 2, three] ).
+%% 2'''
+
 min([_|_]=List) ->
 
     foldl0(fun(X, Min) when X < Min -> X; (_, Min) -> Min end, List).
