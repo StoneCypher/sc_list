@@ -45,7 +45,26 @@ between(List, Delim) ->
 
 
 %% @doc A traditional convenience pre-loader for `foldl', for when the initializer is the list's first member. ```1> sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ).
-%% 20'''
+%% 20
+%%
+%% 2> ForceList = fun(X) when is_integer(X) -> integer_to_list(X);
+%% 2>                (X)                    -> X end.             
+%% #Fun<erl_eval.6.106461118>
+%%
+%% 3> Paren = fun(X,Y) -> "(" ++ ForceList(X) ++ "," ++ ForceList(Y) ++ ")" end.
+%% #Fun<erl_eval.12.106461118>
+%% 
+%% 4> Paren(2,3).
+%% "(2,3)"
+%% 
+%% 5> Paren(2,"(3,4)").
+%% "(2,(3,4))"
+%% 
+%% 6> sc_list:foldl0( Paren, [1,2,3,4,5] ).
+%% "(5,(4,(3,(2,1))))"
+%% 
+%% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
+%% "(2,(3,(4,(5,1))))"'''
 
 foldl0(Fun, [Head|Rem]) ->
 
@@ -54,6 +73,28 @@ foldl0(Fun, [Head|Rem]) ->
 
 
 
+
+%% @doc A traditional convenience pre-loader for `foldr', for when the initializer is the list's first member. ```1> sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ).
+%% 20
+%%
+%% 2> ForceList = fun(X) when is_integer(X) -> integer_to_list(X);
+%% 2>                (X)                    -> X end.             
+%% #Fun<erl_eval.6.106461118>
+%%
+%% 3> Paren = fun(X,Y) -> "(" ++ ForceList(X) ++ "," ++ ForceList(Y) ++ ")" end.
+%% #Fun<erl_eval.12.106461118>
+%% 
+%% 4> Paren(2,3).
+%% "(2,3)"
+%% 
+%% 5> Paren(2,"(3,4)").
+%% "(2,(3,4))"
+%% 
+%% 6> sc_list:foldl0( Paren, [1,2,3,4,5] ).
+%% "(5,(4,(3,(2,1))))"
+%% 
+%% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
+%% "(2,(3,(4,(5,1))))"'''
 
 foldr0(Fun, [Head|Rem]) ->
 

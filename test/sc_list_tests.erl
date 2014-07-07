@@ -26,8 +26,35 @@ between_test_() ->
 
 foldl0_test_() ->
 
+    ForceList = fun
+    	(X) when is_integer(X) -> integer_to_list(X);
+        (X)                    -> X 
+    end,
+
+    Paren = fun(X,Y) -> "(" ++ ForceList(X) ++ "," ++ ForceList(Y) ++ ")" end,
+
     { "foldl0/2", [
 
-        { "20, f(), [2,4,6,8]", ?_assert( 20 == sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ) ) }
+        { "20,  f(),     [2,4,6,8]",   ?_assert( 20                  == sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ) ) },
+        { "..., paren(), [1,2,3,4,5]", ?_assert( "(5,(4,(3,(2,1))))" == sc_list:foldl0( Paren, [1,2,3,4,5] )                          ) }
+
+    ]}.
+
+
+
+
+foldr0_test_() ->
+
+    ForceList = fun
+    	(X) when is_integer(X) -> integer_to_list(X);
+        (X)                    -> X 
+    end,
+
+    Paren = fun(X,Y) -> "(" ++ ForceList(X) ++ "," ++ ForceList(Y) ++ ")" end,
+
+    { "foldl0/2", [
+
+        { "20,  f(),     [2,4,6,8]",   ?_assert( 20                  == sc_list:foldr0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ) ) },
+        { "..., paren(), [1,2,3,4,5]", ?_assert( "(2,(3,(4,(5,1))))" == sc_list:foldr0( Paren, [1,2,3,4,5] )                          ) }
 
     ]}.
