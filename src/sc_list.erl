@@ -14,7 +14,9 @@
 
     extrema/1,
       min/1,
-      max/1
+      max/1,
+
+    key_duplicate/2
 
 ]).
 
@@ -26,9 +28,9 @@
 %% [1,0,2,0,3]
 %%
 %% 2> sc_list:between( [], 0 ).
-%% []
+%% []'''
 %%
-%% Unit and doc tested.'''
+%% Unit and doc tested.
 
 -spec between(List::list(), Delim::any()) -> list().
 
@@ -69,9 +71,9 @@ between(List, Delim) ->
 %% "(5,(4,(3,(2,1))))"
 %% 
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
-%% "(2,(3,(4,(5,1))))"
+%% "(2,(3,(4,(5,1))))"'''
 %%
-%% Unit and doc tested.'''
+%% Unit and doc tested.
 
 -spec foldl0(Fun::fun(), List::nonempty_list()) -> any().
 
@@ -103,9 +105,9 @@ foldl0(Fun, [Head|Rem]) ->
 %% "(5,(4,(3,(2,1))))"
 %% 
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
-%% "(2,(3,(4,(5,1))))
+%% "(2,(3,(4,(5,1))))"'''
 %%
-%% Unit and doc tested."'''
+%% Unit and doc tested.
 
 -spec foldr0(Fun::fun(), List::nonempty_list()) -> any().
 
@@ -124,9 +126,9 @@ foldr0(Fun, [Head|Rem]) ->
 %% 3
 %%
 %% 3> sc_list:max( [1, two, 3] ).
-%% two
+%% two'''
 %%
-%% Unit and doc tested.'''
+%% Unit and doc tested.
 
 -spec max(Name::nonempty_list()) -> any().
 
@@ -145,9 +147,9 @@ max([_|_]=List) ->
 %% 1
 %%
 %% 3> sc_list:min( [one, 2, three] ).
-%% 2
+%% 2'''
 %%
-%% Unit and doc tested.'''
+%% Unit and doc tested.
 
 -spec min(Name::nonempty_list()) -> any().
 
@@ -193,3 +195,23 @@ extrema([First | _] = List) ->
     end,
 
     lists:foldl(Next, {First,First}, List).
+
+
+
+
+
+%% @doc <span style="color: green; font-weight: bold;">Tested</span> Iterates a list of `{Count,Term}', producing a list of `[Term,Term,...]'.  ```1> sc:key_duplicate([ {3,bork} ]).
+%% [bork,bork,bork]
+%%
+%% 2> sc:key_duplicate([ {3,sunday}, {2,monster}, {2,truck}, {1,'MADNESS'} ]).
+%% [sunday,sunday,sunday,monster,monster,truck,truck,'MADNESS']'''
+%%
+%% Unit, doc, spec and stochastic (correct length) tested.
+%%
+%% @since Version 462
+
+-spec key_duplicate(KeyList::list({non_neg_integer(),any()})) -> [any()].
+
+key_duplicate(KeyList) ->
+
+    lists:append( [ lists:duplicate(Key, Value) || {Key,Value} <- KeyList ] ).
