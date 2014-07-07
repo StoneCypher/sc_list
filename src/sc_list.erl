@@ -12,8 +12,9 @@
     foldl0/2,
       foldr0/2,
 
-    max/1,
-      min/1
+    extrema/1,
+      min/1,
+      max/1
 
 ]).
 
@@ -143,3 +144,42 @@ max([_|_]=List) ->
 min([_|_]=List) ->
 
     foldl0(fun(X, Min) when X < Min -> X; (_, Min) -> Min end, List).
+
+
+
+
+
+%% @doc <span style="color: green; font-weight: bold;">Tested</span> Returns the lowest and highest values in a list of one or more member in the form `{Lo,Hi}'.  Undefined over the empty list.  Mixed-type safe; sorts according to type order rules.  ```1> sc:extrema([1,2,3,4]).
+%% {1,4}
+%%
+%% 2> sc:extrema([1,2,3,a,b,c]).
+%% {1,c}'''
+%%
+%% 3> sc:extrema( [] ).
+%% ** exception error: no function clause matching sc:extrema([])'''
+%%
+%% Unit, doc and stochastic (min and max are list members) tested.
+
+-spec extrema(List::nonempty_list()) -> { Low::any(), Hi::any() }.
+
+extrema([First | _] = List) ->
+
+    Next = fun(Next,T) ->
+
+        {Lo, Hi} = T,
+
+        Lo2 = if
+            Next < Lo -> Next;
+            true      -> Lo
+        end,
+
+        Hi2 = if
+            Next > Hi -> Next;
+            true      -> Hi
+        end,
+
+        {Lo2, Hi2}
+
+    end,
+
+    lists:foldl(Next, {First,First}, List).
