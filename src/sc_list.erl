@@ -26,7 +26,9 @@
 %% [1,0,2,0,3]
 %%
 %% 2> sc_list:between( [], 0 ).
-%% []'''
+%% []
+%%
+%% Unit and doc tested.'''
 
 -spec between(List::list(), Delim::any()) -> list().
 
@@ -67,7 +69,9 @@ between(List, Delim) ->
 %% "(5,(4,(3,(2,1))))"
 %% 
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
-%% "(2,(3,(4,(5,1))))"'''
+%% "(2,(3,(4,(5,1))))"
+%%
+%% Unit and doc tested.'''
 
 -spec foldl0(Fun::fun(), List::nonempty_list()) -> any().
 
@@ -99,7 +103,9 @@ foldl0(Fun, [Head|Rem]) ->
 %% "(5,(4,(3,(2,1))))"
 %% 
 %% 7> sc_list:foldr0( Paren, [1,2,3,4,5] ).
-%% "(2,(3,(4,(5,1))))"'''
+%% "(2,(3,(4,(5,1))))
+%%
+%% Unit and doc tested."'''
 
 -spec foldr0(Fun::fun(), List::nonempty_list()) -> any().
 
@@ -118,7 +124,9 @@ foldr0(Fun, [Head|Rem]) ->
 %% 3
 %%
 %% 3> sc_list:max( [1, two, 3] ).
-%% two'''
+%% two
+%%
+%% Unit and doc tested.'''
 
 -spec max(Name::nonempty_list()) -> any().
 
@@ -137,7 +145,9 @@ max([_|_]=List) ->
 %% 1
 %%
 %% 3> sc_list:min( [one, 2, three] ).
-%% 2'''
+%% 2
+%%
+%% Unit and doc tested.'''
 
 -spec min(Name::nonempty_list()) -> any().
 
@@ -149,7 +159,7 @@ min([_|_]=List) ->
 
 
 
-%% @doc <span style="color: green; font-weight: bold;">Tested</span> Returns the lowest and highest values in a list of one or more member in the form `{Lo,Hi}'.  Undefined over the empty list.  Mixed-type safe; sorts according to type order rules.  ```1> sc:extrema([1,2,3,4]).
+%% @doc <span style="color: green; font-weight: bold;">Stoch</span> Returns the lowest and highest values in a list of one or more member in the form `{Lo,Hi}'.  Undefined over the empty list.  Mixed-type safe; sorts according to type order rules.  ```1> sc:extrema([1,2,3,4]).
 %% {1,4}
 %%
 %% 2> sc:extrema([1,2,3,a,b,c]).
