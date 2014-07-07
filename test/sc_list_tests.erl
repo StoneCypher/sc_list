@@ -154,3 +154,18 @@ key_duplicate_test_() ->
         {"Stochastic: correct length",                            ?_assert( true =:= proper:quickcheck(prop_key_duplicate_correct_length()) ) }
 
     ] }.
+
+
+
+
+
+implode_test_() ->
+
+    { "Implode tests", [
+
+        {"a,b,c",    ?_assert("a,b,c"    =:= sc_list:implode(",", ["a",  "b",  "c" ]))},
+        {"ab,cd,ef", ?_assert("ab,cd,ef" =:= sc_list:implode(",", ["ab", "cd", "ef"]))},
+        {",,",       ?_assert(",,"       =:= sc_list:implode(",", ["",   "",   ""  ]))},
+        {"",         ?_assert(""         =:= sc_list:implode("",  ["",   "",   ""  ]))}
+
+    ] }.
