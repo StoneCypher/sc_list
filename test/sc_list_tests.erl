@@ -64,6 +64,20 @@ foldr0_test_() ->
 
 
 
+min_test_() ->
+
+    { "min/1", [
+
+        { "[1]",             ?_assert( 1 == sc_list:min( [1] )             ) },
+        { "[1, 2, 3]",       ?_assert( 1 == sc_list:min( [1, 2, 3] )       ) },
+        { "[1, 2.0, 3]",     ?_assert( 1 == sc_list:min( [1, 2.0, 3] )     ) },
+        { "[one, 2, three]", ?_assert( 2 == sc_list:min( [one, 2, three] ) ) }
+
+    ] }.
+
+
+
+
 max_test_() ->
 
     { "max/1", [
@@ -79,13 +93,32 @@ max_test_() ->
 
 
 
-min_test_() ->
+prop_extrema_min_max_are_members() ->
 
-    { "min/1", [
+    ?FORALL( 
+    	L,
+    	non_empty(list(proper_types:any())),
 
-        { "[1]",             ?_assert( 1 == sc_list:min( [1] )             ) },
-        { "[1, 2, 3]",       ?_assert( 1 == sc_list:min( [1, 2, 3] )       ) },
-        { "[1, 2.0, 3]",     ?_assert( 1 == sc_list:min( [1, 2.0, 3] )     ) },
-        { "[one, 2, three]", ?_assert( 2 == sc_list:min( [one, 2, three] ) ) }
+        case sc_list:extrema(L) of {Min,Max} -> {true,true} =:= {lists:member(Min,L),lists:member(Max,L)}; _ -> false end           
+    ).
+
+
+extrema_test_() ->
+
+    { "Extrema tests", [
+
+        {"8,6,7,5,3,0,9",                           ?_assert( {0,9}      =:= sc_list:extrema( [8,6,7,5,3,0,9] ) ) },
+        {"1,2,3,4",                                 ?_assert( {1,4}      =:= sc_list:extrema( [1,2,3,4]       ) ) },
+        {"-1,-2,-3",                                ?_assert( {-3,-1}    =:= sc_list:extrema( [-1,-2,-3]      ) ) },
+        {"-1.1,0,1.1",                              ?_assert( {-1.1,1.1} =:= sc_list:extrema( [-1.1,1.1]      ) ) },
+        {"a,b,c",                                   ?_assert( {a,c}      =:= sc_list:extrema( [a,b,c]         ) ) },
+        {"1,a,{}",                                  ?_assert( {1,{}}     =:= sc_list:extrema( [1,a,{}]        ) ) },
+        {"1",                                       ?_assert( {1,1}      =:= sc_list:extrema( [1]             ) ) },
+        {"1,2,3,a,b,c",                             ?_assert( {1,c}      =:= sc_list:extrema( [1,2,3,a,b,c]   ) ) },
+
+        {"[] error undefined",                      ?_assertError(function_clause, sc_list:extrema([]) ) },
+
+        {"Stochastic: min/max are members",         ?_assert( true =:= proper:quickcheck(prop_extrema_min_max_are_members()) ) },
+        {"Stochastic error: not a list type error", ?_assertError(function_clause, sc_list:extrema([]) ) }
 
     ] }.
