@@ -16,7 +16,9 @@
       min/1,
       max/1,
 
-    key_duplicate/1
+    key_duplicate/1,
+
+    implode/2
 
 ]).
 
@@ -91,7 +93,7 @@ foldl0(Fun, [Head|Rem]) ->
 %% 20
 %%
 %% 2> ForceList = fun(X) when is_integer(X) -> integer_to_list(X);
-%% 2>                (X)                    -> X end.             
+%% 2>                (X)                    -> X end.
 %% #Fun<erl_eval.6.106461118>
 %%
 %% 3> Paren = fun(X,Y) -> "(" ++ ForceList(X) ++ "," ++ ForceList(Y) ++ ")" end.
@@ -165,14 +167,14 @@ min([_|_]=List) ->
 
 
 
-%% @doc <span style="color: green; font-weight: bold;">Stoch</span> Returns the lowest and highest values in a list of one or more member in the form `{Lo,Hi}'.  Undefined over the empty list.  Mixed-type safe; sorts according to type order rules.  ```1> sc:extrema([1,2,3,4]).
+%% @doc <span style="color: green; font-weight: bold;">Stoch</span> Returns the lowest and highest values in a list of one or more member in the form `{Lo,Hi}'.  Undefined over the empty list.  Mixed-type safe; sorts according to type order rules.  ```1> sc_list:extrema([1,2,3,4]).
 %% {1,4}
 %%
-%% 2> sc:extrema([1,2,3,a,b,c]).
+%% 2> sc_list:extrema([1,2,3,a,b,c]).
 %% {1,c}'''
 %%
-%% 3> sc:extrema( [] ).
-%% ** exception error: no function clause matching sc:extrema([])'''
+%% 3> sc_list:extrema( [] ).
+%% ** exception error: no function clause matching sc_list:extrema([])'''
 %%
 %% Unit, doc and stochastic (min and max are list members) tested.
 
@@ -204,10 +206,10 @@ extrema([First | _] = List) ->
 
 
 
-%% @doc <span style="color: green; font-weight: bold;">Stoch, spec</span> Iterates a list of `{Count,Term}', producing a list of `[Term,Term,...]'.  ```1> sc:key_duplicate([ {3,bork} ]).
+%% @doc <span style="color: green; font-weight: bold;">Stoch, spec</span> Iterates a list of `{Count,Term}', producing a list of `[Term,Term,...]'.  ```1> sc_list:key_duplicate([ {3,bork} ]).
 %% [bork,bork,bork]
 %%
-%% 2> sc:key_duplicate([ {3,sunday}, {2,monster}, {2,truck}, {1,'MADNESS'} ]).
+%% 2> sc_list:key_duplicate([ {3,sunday}, {2,monster}, {2,truck}, {1,'MADNESS'} ]).
 %% [sunday,sunday,sunday,monster,monster,truck,truck,'MADNESS']'''
 %%
 %% Unit, doc, spec and stochastic (correct length) tested.
@@ -217,3 +219,44 @@ extrema([First | _] = List) ->
 key_duplicate(KeyList) ->
 
     lists:append( [ lists:duplicate(Key, Value) || {Key,Value} <- KeyList ] ).
+
+
+
+
+
+%% @since Version 621
+%%
+%% @doc <span style="color:orange;font-style:italic">Stoch untested</span> Append strings with separating string inbetween - contrast {@link explode/2}. ```1> sc_list:implode(",", ["a", "b", "c"]).
+%% "a,b,c"
+%%
+%% 2> sc_list:implode(",", ["ab", "cd", "ef"]).
+%% "ab,cd,ef"
+%%
+%% 3> sc_list:implode(",", ["", "", ""]).
+%% ",,"
+%%
+%% 4> sc_list:implode("-wop ", ["do", "do", "do"]).
+%% "do-wop do-wop do"
+%%
+%% 5> sc_list:implode("", ["", "", ""]).
+%% []'''
+%%
+%% thanks for a much better implementation, etnt
+
+implode(Separator, Data)
+
+    when is_list(Data),
+         is_list(Separator) ->
+
+    lists:append(
+        lists:foldr(
+
+            fun(Item, [])  -> [Item];
+               (Item, Acc) -> [Item] ++ [Separator] ++ Acc
+            end,
+
+            "",
+            Data
+
+        )
+    ).
