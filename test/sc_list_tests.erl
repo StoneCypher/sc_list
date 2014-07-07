@@ -122,3 +122,35 @@ extrema_test_() ->
         {"Stochastic error: not a list type error", ?_assertError(function_clause, sc_list:extrema([]) ) }
 
     ] }.
+
+
+
+
+
+prop_key_duplicate_correct_length() ->
+
+    ?FORALL( { L,                              I                  },
+             { proper_types:non_neg_integer(), proper_types:any() },
+
+             abs(L) == length( sc_list:key_duplicate([ {abs(L),I} ]) )
+
+           ).
+
+
+key_duplicate_test_() ->
+
+    { "Key duplicate tests", [
+
+        {"[ ]",                                                   ?_assert( []                                                           =:= sc_list:key_duplicate([ ])                                                ) },
+        {"[ {2,a} ]",                                             ?_assert( [a,a]                                                        =:= sc_list:key_duplicate([ {2,a} ])                                          ) },
+        {"[ {2,a},{3,b} ]",                                       ?_assert( [a,a,b,b,b]                                                  =:= sc_list:key_duplicate([ {2,a},{3,b} ])                                    ) },
+        {"[ {3,bork} ]",                                          ?_assert( [bork,bork,bork]                                             =:= sc_list:key_duplicate([ {3,bork} ])                                       ) },
+        {"[ {3,sunday}, {2,monster}, {2,truck}, {1,'MADNESS'} ]", ?_assert( [sunday,sunday,sunday,monster,monster,truck,truck,'MADNESS'] =:= sc_list:key_duplicate([ {3,sunday},{2,monster},{2,truck},{1,'MADNESS'} ]) ) },
+
+        {"Regression: key empty-list",                            ?_assert( [ [], [] ]  =:= sc_list:key_duplicate([ {2, []} ])     ) },
+
+        {"Spec test",                                             ?_assert( true =:= proper:check_spec({sc_list,key_duplicate,1}) ) },
+
+        {"Stochastic: correct length",                            ?_assert( true =:= proper:quickcheck(prop_key_duplicate_correct_length()) ) }
+
+    ] }.

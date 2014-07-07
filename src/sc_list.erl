@@ -16,7 +16,7 @@
       min/1,
       max/1,
 
-    key_duplicate/2
+    key_duplicate/1
 
 ]).
 
@@ -200,15 +200,13 @@ extrema([First | _] = List) ->
 
 
 
-%% @doc <span style="color: green; font-weight: bold;">Tested</span> Iterates a list of `{Count,Term}', producing a list of `[Term,Term,...]'.  ```1> sc:key_duplicate([ {3,bork} ]).
+%% @doc <span style="color: green; font-weight: bold;">Stoch, spec</span> Iterates a list of `{Count,Term}', producing a list of `[Term,Term,...]'.  ```1> sc:key_duplicate([ {3,bork} ]).
 %% [bork,bork,bork]
 %%
 %% 2> sc:key_duplicate([ {3,sunday}, {2,monster}, {2,truck}, {1,'MADNESS'} ]).
 %% [sunday,sunday,sunday,monster,monster,truck,truck,'MADNESS']'''
 %%
 %% Unit, doc, spec and stochastic (correct length) tested.
-%%
-%% @since Version 462
 
 -spec key_duplicate(KeyList::list({non_neg_integer(),any()})) -> [any()].
 
