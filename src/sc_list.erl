@@ -104,6 +104,15 @@ foldr0(Fun, [Head|Rem]) ->
 
 
 
+%% @doc Returns the maximum of a non-empty list of values, type-insensitive. ```1> sc_list:max( [1, 2, 3] ).
+%% 3
+%%
+%% 2> sc_list:max( [1, 2.0, 3] ).
+%% 3
+%%
+%% 3> sc_list:max( [1, two, 3] ).
+%% two'''
+
 max([_|_]=List) ->
 
     foldl0(fun(X, Max) when X > Max -> X; (_, Max) -> Max end, List).
