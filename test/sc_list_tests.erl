@@ -74,3 +74,18 @@ max_test_() ->
         { "[1, two, 3]", ?_assert( two == sc_list:max( [1, two, 3] ) ) }
 
     ] }.
+
+
+
+
+
+min_test_() ->
+
+    { "min/1", [
+
+        { "[1]",             ?_assert( 1 == sc_list:min( [1] )             ) },
+        { "[1, 2, 3]",       ?_assert( 1 == sc_list:min( [1, 2, 3] )       ) },
+        { "[1, 2.0, 3]",     ?_assert( 1 == sc_list:min( [1, 2.0, 3] )     ) },
+        { "[one, 2, three]", ?_assert( 2 == sc_list:min( [one, 2, three] ) ) }
+
+    ] }.
