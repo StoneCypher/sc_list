@@ -44,6 +44,9 @@ between(List, Delim) ->
 
 
 
+%% @doc A traditional convenience pre-loader for `foldl', for when the initializer is the list's first member. ```1> sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ).
+%% 20'''
+
 foldl0(Fun, [Head|Rem]) ->
 
     lists:foldl(Fun, Head, Rem).

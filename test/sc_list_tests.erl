@@ -19,3 +19,15 @@ between_test_() ->
         { "[[1],[2],[3]], [0]", ?_assert([[1],[0],[2],[0],[3]] == sc_list:between([[1],[2],[3]], [0])) }
 
     ]}.
+
+
+
+
+
+foldl0_test_() ->
+
+    { "foldl0/2", [
+
+        { "20, f(), [2,4,6,8]", ?_assert( 20 == sc_list:foldl0( fun(Step, Acc) -> Step + Acc end, [2,4,6,8] ) ) }
+
+    ]}.
