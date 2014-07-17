@@ -169,3 +169,53 @@ implode_test_() ->
         {"",         ?_assert(""         =:= sc_list:implode("",  ["",   "",   ""  ]))}
 
     ] }.
+
+
+
+
+
+prop_rotate_list_correct_length() ->
+
+    ?FORALL( { R,     L                        },
+             { int(), list(proper_types:any()) },
+
+             length(L) == length(sc_list:rotate_list(R,L))
+
+           ).
+
+
+
+
+
+prop_rotate_list_same_histo() ->
+
+    ?FORALL( { R,     L                        },
+             { int(), list(proper_types:any()) },
+
+             sc_list:histograph(L) == sc_list:histograph(sc_list:rotate_list(R,L))
+
+           ).
+
+
+
+
+
+rotate_list_test_() ->
+
+    { "Rotate list tests", [
+
+        {"0,  [ ]",       ?_assert( []      =:= sc_list:rotate_list(0,  [ ])       ) },
+        {"1,  [ ]",       ?_assert( []      =:= sc_list:rotate_list(1,  [ ])       ) },
+        {"-1, [ ]",       ?_assert( []      =:= sc_list:rotate_list(-1, [ ])       ) },
+
+        {"0,  [ a,b,c ]", ?_assert( [a,b,c] =:= sc_list:rotate_list(0,  [ a,b,c ]) ) },
+        {"1,  [ a,b,c ]", ?_assert( [b,c,a] =:= sc_list:rotate_list(1,  [ a,b,c ]) ) },
+        {"-1, [ a,b,c ]", ?_assert( [c,a,b] =:= sc_list:rotate_list(-1, [ a,b,c ]) ) },
+        {"3,  [ a,b,c ]", ?_assert( [a,b,c] =:= sc_list:rotate_list(3,  [ a,b,c ]) ) },
+        {"-3, [ a,b,c ]", ?_assert( [a,b,c] =:= sc_list:rotate_list(-3, [ a,b,c ]) ) },
+        {"9,  [ a,b,c ]", ?_assert( [a,b,c] =:= sc_list:rotate_list(9,  [ a,b,c ]) ) },
+
+        {"Stochastic: correct length",  ?_assert( true  =:= proper:quickcheck(prop_rotate_list_correct_length()) ) },
+        {"Stochastic: same histograph", ?_assert( true  =:= proper:quickcheck(prop_rotate_list_same_histo()) ) }
+
+    ] }.
