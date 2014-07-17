@@ -30,6 +30,15 @@
 
 
 
+-type weighted_value()           :: { Value::any(), Weight::number() }.    %% Used by functions like weighted_arithmetic_mean/1 and from_weighted/1, weighted_value()s represent a value with an associated importance or "weight".
+-type weighted_value(T)          :: { Value::T, Weight::number() }.        %% Used by functions like weighted_arithmetic_mean/1 and from_weighted/1, weighted_value()s represent a value with an associated importance or "weight".
+-type weight_list()              :: [ weighted_value() ].                  %% All members of weightlists must be weighted_value()s.
+-type weight_list(T)             :: [ weighted_value(T) ].                 %% All members of weightlists must be weighted_value(T)s.
+
+
+
+
+
 %% @doc Places a delimiter inbetween every item in the list. ```1> sc_list:between( [1,2,3], 0 ).
 %% [1,0,2,0,3]
 %%
