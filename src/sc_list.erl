@@ -18,7 +18,9 @@
 
     key_duplicate/1,
 
-    implode/2
+    implode/2,
+
+    rotate_list/2
 
 ]).
 
@@ -260,3 +262,67 @@ implode(Separator, Data)
 
         )
     ).
+
+
+
+
+
+
+%% @doc <span style="color: green; font-weight: bold;">Tested</span> Rotates the front `Distance' elements of a list to the back, in order.  Negative distances rotate the back towards the front.  Distances over the length of
+%% the list wrap in modulus.  ```1> sc_list:rotate_list(2, [1,2,3,4,5,6,7,8]).
+%% [3,4,5,6,7,8,1,2]
+%%
+%% 2> sc_list:rotate_list(-2, [1,2,3,4,5,6,7,8]).
+%% [7,8,1,2,3,4,5,6]
+%%
+%% 3> sc_list:rotate_list(0, [1,2,3,4,5,6,7,8]).
+%% [1,2,3,4,5,6,7,8]
+%%
+%% 4> sc_list:rotate_list(16, [1,2,3,4,5,6,7,8]).
+%% [1,2,3,4,5,6,7,8]'''
+%%
+%% @since Version 463
+
+-spec rotate_list(Distance::integer(), ListData::list()) -> list().
+
+rotate_list(_, []) ->
+
+    [];
+
+
+
+rotate_list(0, List) ->
+
+    List;
+
+
+
+rotate_list(By, List)
+
+    when By =< (-(length(List))) ->
+
+    rotate_list(By rem length(List), List);
+
+
+
+rotate_list(By, List)
+
+    when By < 0 ->
+
+    rotate_list(length(List) + By, List);
+
+
+
+rotate_list(By, List)
+
+    when By >= length(List) ->
+
+    rotate_list(By rem length(List), List);
+
+
+
+rotate_list(By, List) ->
+
+    { Front, Rear } = lists:split(By, List),
+
+    Rear ++ Front.
