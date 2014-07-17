@@ -20,7 +20,9 @@
 
     implode/2,
 
-    rotate_list/2
+    rotate_list/2,
+
+    histograph/1
 
 ]).
 
@@ -280,8 +282,6 @@ implode(Separator, Data)
 %%
 %% 4> sc_list:rotate_list(16, [1,2,3,4,5,6,7,8]).
 %% [1,2,3,4,5,6,7,8]'''
-%%
-%% @since Version 463
 
 -spec rotate_list(Distance::integer(), ListData::list()) -> list().
 
@@ -326,3 +326,78 @@ rotate_list(By, List) ->
     { Front, Rear } = lists:split(By, List),
 
     Rear ++ Front.
+
+
+
+
+%% @doc <span style="color:red;font-style:italic">Untested</span> <span style="color:orange;font-style:italic">Stoch untested</span> Takes a histograph count of the items in the list.  Mixed type lists are safe.  Input lists do not need to be sorted.  The histograph is shallow - that is, the histograph of `[ [1,2], [1,2], [2,2] ]' is `[ {[1,2],2}, {[2,2],1} ]', not `[ {1,2}, {2,4} ]'. ```1> sc_list:histograph([1,2,a,2,b,1,b,1,b,2,a,2,2,1]).
+%% [{1,4},{2,5},{a,2},{b,3}]
+%%
+%% 2> sc_list:histograph([ sc:rand(10) || X <- lists:seq(1,100000) ]).
+%% [{0,10044}, {1,9892}, {2,10009}, {3,10016}, {4,10050}, {5,10113}, {6,9990}, {7,9994}, {8,10004}, {9,9888}]
+%%
+%% 3> ChessBoard = [ rook,  knight, bishop, king,  queen, bishop, knight, rook,
+%%                   pawn,  pawn,   pawn,   pawn,  pawn,  pawn,   pawn,   pawn,
+%%                   empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+%%                   empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+%%                   empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+%%                   empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+%%                   pawn,  pawn,   pawn,   pawn,  pawn,  pawn,   pawn,   pawn,
+%%                   rook,  knight, bishop, king,  queen, bishop, knight, rook ].
+%% [rook,knight,bishop,king,queen,bishop,knight,rook,pawn,pawn,
+%%  pawn,pawn,pawn,pawn,pawn,pawn,empty,empty,empty,empty,empty,
+%%  empty,empty,empty,empty,empty,empty,empty,empty|...]
+%%
+%% 4> sc_list:histograph(ChessBoard).
+%% [ { bishop, 4  },
+%%   { empty,  32 },
+%%   { king,   2  },
+%%   { knight, 4  },
+%%   { pawn,   16 },
+%%   { queen,  2  },
+%%   { rook,   4  } ]'''
+%%
+%% @todo add an argument presort to this and other functions to skip the sorting pass
+
+-spec histograph(List::list()) -> weight_list().
+
+histograph([]) ->
+
+    [];
+
+
+
+
+
+histograph(List)
+
+    when is_list(List) ->
+
+    [Head|Tail] = lists:sort(List),
+    histo_count(Tail, Head, 1, []).
+
+
+
+
+
+%% @private
+
+histo_count( [], Current, Count, Work) ->
+
+     lists:reverse( [{Current,Count}] ++ Work);
+
+
+
+
+
+histo_count( [Current|Tail], Current, Count, Work) ->
+
+    histo_count(Tail, Current, Count+1, Work);
+
+
+
+
+
+histo_count( [New|Tail], Current, Count, Work) ->
+
+    histo_count(Tail, New, 1, [{Current,Count}] ++ Work).
