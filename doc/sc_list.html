@@ -10,18 +10,30 @@
 <hr>
 
 <h1>Module sc_list</h1>
-<ul class="index"><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
+<ul class="index"><li><a href="#types">Data Types</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>
 
+
+<h2><a name="types">Data Types</a></h2>
+
+<h3 class="typedecl"><a name="type-weight_list">weight_list()</a></h3>
+<p><tt>weight_list(T) = [<a href="#type-weighted_value">weighted_value</a>(T)]</tt></p>
+<p>  All members of weightlists must be weighted_value(T)s.</p>
+
+<h3 class="typedecl"><a name="type-weighted_value">weighted_value()</a></h3>
+<p><tt>weighted_value(T) = {Value::T, Weight::number()}</tt></p>
+<p>  Used by functions like weighted_arithmetic_mean/1 and from_weighted/1, weighted_value()s represent a value with an associated importance or "weight".</p>
 
 <h2><a name="index">Function Index</a></h2>
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#between-2">between/2</a></td><td>Places a delimiter inbetween every item in the list.</td></tr>
 <tr><td valign="top"><a href="#extrema-1">extrema/1</a></td><td><span style="color: green; font-weight: bold;">Stoch</span> Returns the lowest and highest values in a list of one or more member in the form <code>{Lo,Hi}</code>.</td></tr>
 <tr><td valign="top"><a href="#foldl0-2">foldl0/2</a></td><td>A traditional convenience pre-loader for <code>foldl</code>, for when the initializer is the list's first member.</td></tr>
 <tr><td valign="top"><a href="#foldr0-2">foldr0/2</a></td><td>A traditional convenience pre-loader for <code>foldr</code>, for when the initializer is the list's first member.</td></tr>
+<tr><td valign="top"><a href="#histograph-1">histograph/1</a></td><td><span style="color:red;font-style:italic">Untested</span> <span style="color:orange;font-style:italic">Stoch untested</span> Takes a histograph count of the items in the list.</td></tr>
 <tr><td valign="top"><a href="#implode-2">implode/2</a></td><td><span style="color:orange;font-style:italic">Stoch untested</span> Append strings with separating string inbetween - contrast <a href="#explode-2"><code>explode/2</code></a>.</td></tr>
 <tr><td valign="top"><a href="#key_duplicate-1">key_duplicate/1</a></td><td><span style="color: green; font-weight: bold;">Stoch, spec</span> Iterates a list of <code>{Count,Term}</code>, producing a list of <code>[Term,Term,...]</code>.</td></tr>
 <tr><td valign="top"><a href="#max-1">max/1</a></td><td>Returns the maximum of a non-empty list of values, type-insensitive.</td></tr>
 <tr><td valign="top"><a href="#min-1">min/1</a></td><td>Returns the minimum of a non-empty list of values, type-insensitive.</td></tr>
+<tr><td valign="top"><a href="#rotate_list-2">rotate_list/2</a></td><td><span style="color: green; font-weight: bold;">Tested</span> Rotates the front <code>Distance</code> elements of a list to the back, in order.</td></tr>
 </table>
 
 <h2><a name="functions">Function Details</a></h2>
@@ -109,6 +121,38 @@
  </p>
 <p><b><font color="red">To do</font></b><ul><li><font color="red">Stochastic match test of foldr0/2 to foldr/3</font></li></ul></p>
 
+<h3 class="function"><a name="histograph-1">histograph/1</a></h3>
+<div class="spec">
+<p><tt>histograph(List::list()) -&gt; <a href="#type-weight_list">weight_list</a>(_T)</tt><br></p>
+</div><p><span style="color:red;font-style:italic">Untested</span> <span style="color:orange;font-style:italic">Stoch untested</span> Takes a histograph count of the items in the list.  Mixed type lists are safe.  Input lists do not need to be sorted.  The histograph is shallow - that is, the histograph of <code>[ [1,2], [1,2], [2,2] ]</code> is <code>[ {[1,2],2}, {[2,2],1} ]</code>, not <code>[ {1,2}, {2,4} ]</code>. <pre>  1&gt; sc_list:histograph([1,2,a,2,b,1,b,1,b,2,a,2,2,1]).
+  [{1,4},{2,5},{a,2},{b,3}]
+ 
+  2&gt; sc_list:histograph([ sc:rand(10) || X &lt;- lists:seq(1,100000) ]).
+  [{0,10044}, {1,9892}, {2,10009}, {3,10016}, {4,10050}, {5,10113}, {6,9990}, {7,9994}, {8,10004}, {9,9888}]
+ 
+  3&gt; ChessBoard = [ rook,  knight, bishop, king,  queen, bishop, knight, rook,
+                    pawn,  pawn,   pawn,   pawn,  pawn,  pawn,   pawn,   pawn,
+                    empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+                    empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+                    empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+                    empty, empty,  empty,  empty, empty, empty,  empty,  empty,
+                    pawn,  pawn,   pawn,   pawn,  pawn,  pawn,   pawn,   pawn,
+                    rook,  knight, bishop, king,  queen, bishop, knight, rook ].
+  [rook,knight,bishop,king,queen,bishop,knight,rook,pawn,pawn,
+   pawn,pawn,pawn,pawn,pawn,pawn,empty,empty,empty,empty,empty,
+   empty,empty,empty,empty,empty,empty,empty,empty|...]
+ 
+  4&gt; sc_list:histograph(ChessBoard).
+  [ { bishop, 4  },
+    { empty,  32 },
+    { king,   2  },
+    { knight, 4  },
+    { pawn,   16 },
+    { queen,  2  },
+    { rook,   4  } ]</pre>
+ </p>
+<p><b><font color="red">To do</font></b><ul><li><font color="red">add an argument presort to this and other functions to skip the sorting pass</font></li></ul></p>
+
 <h3 class="function"><a name="implode-2">implode/2</a></h3>
 <div class="spec">
 <p><tt>implode(Separator, Data) -&gt; any()</tt></p>
@@ -169,9 +213,25 @@
   2</pre>
  
   Unit and doc tested.</p>
+
+<h3 class="function"><a name="rotate_list-2">rotate_list/2</a></h3>
+<div class="spec">
+<p><tt>rotate_list(Distance::integer(), ListData::list()) -&gt; list()</tt><br></p>
+</div><p><span style="color: green; font-weight: bold;">Tested</span> Rotates the front <code>Distance</code> elements of a list to the back, in order.  Negative distances rotate the back towards the front.  Distances over the length of
+  the list wrap in modulus.  <pre>  1&gt; sc_list:rotate_list(2, [1,2,3,4,5,6,7,8]).
+  [3,4,5,6,7,8,1,2]
+ 
+  2&gt; sc_list:rotate_list(-2, [1,2,3,4,5,6,7,8]).
+  [7,8,1,2,3,4,5,6]
+ 
+  3&gt; sc_list:rotate_list(0, [1,2,3,4,5,6,7,8]).
+  [1,2,3,4,5,6,7,8]
+ 
+  4&gt; sc_list:rotate_list(16, [1,2,3,4,5,6,7,8]).
+  [1,2,3,4,5,6,7,8]</pre></p>
 <hr>
 
 <div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
-<p><i>Generated by EDoc, Jul 7 2014, 08:23:18.</i></p>
+<p><i>Generated by EDoc, Jul 17 2014, 00:00:20.</i></p>
 </body>
 </html>
