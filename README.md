@@ -1,7 +1,7 @@
 sc_list
 =======
 
-A simple library full of list and string utilities.  Requires R14 or greater.
+A simple library full of list and string utilities.  An extension of and analogous to the standard module `lists:`.  Requires R14 or greater.
 
 ![Language](http://img.shields.io/badge/Language-Lisp_in_Erlang-000000.svg) &nbsp;
 ![Platform](http://img.shields.io/badge/Platform-OTP-000000.svg) &nbsp;
