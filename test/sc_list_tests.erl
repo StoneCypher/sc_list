@@ -219,3 +219,19 @@ rotate_list_test_() ->
         {"Stochastic: same histograph", ?_assert( true  =:= proper:quickcheck(prop_rotate_list_same_histo()) ) }
 
     ] }.
+
+
+
+
+
+list_intersection_test_() ->
+
+    { "List intersection tests", [
+
+        {"[3,1,4],[1,5,9]", ?_assert( [1]     =:= sc_list:intersection([3,1,4],[1,5,9]) )},
+        {"[3,1,4],[2,5,9]", ?_assert( []      =:= sc_list:intersection([3,1,4],[2,5,9]) )},
+        {"[3,1,4],[1,4,3]", ?_assert( [4,3,1] =:= sc_list:intersection([3,1,4],[1,4,3]) )},
+        {"[3,1,4],[3,1,4]", ?_assert( [4,3,1] =:= sc_list:intersection([3,1,4],[3,1,4]) )},
+        {"[3,a,4],[a,5,3]", ?_assert( [a,3]   =:= sc_list:intersection([3,a,4],[a,5,3]) )}
+
+    ] }.
