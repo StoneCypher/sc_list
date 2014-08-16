@@ -22,7 +22,11 @@
 
     rotate_list/2,
 
-    histograph/1
+    histograph/1,
+
+    intersection/2,
+      intersection/3
+
 
 ]).
 
@@ -408,3 +412,87 @@ histo_count( [Current|Tail], Current, Count, Work) ->
 histo_count( [New|Tail], Current, Count, Work) ->
 
     histo_count(Tail, New, 1, [{Current,Count}] ++ Work).
+
+
+
+
+
+%% @equiv intersection(List1, List2, unsorted)
+
+intersection(List1, List2) ->
+
+    intersection(List1, List2, unsorted).
+
+
+
+
+
+%% @doc <span style="color:orange;font-style:italic">Stoch untested</span> Efficiently computes the intersection of two lists.  The third parameter, which is optional and defaults to `unsorted', is either the atom `sorted' or `unsorted'.  If `sorted' is used, the function will sort both inputs before proceeding, as it requires sorted lists; as such, if you already know your lists to be sorted, passing `unsorted' will save some time.  The return list will be reverse sorted. ```1> sc_list:intersection([1,2,3,4,5,2,3,10,15,25,30,40,45,55],[1,3,5,5,5,15,20,30,35,40,50,55]).
+%% [55,40,30,15,5,3,1]
+%%
+%% 2> sc_list:intersection([1],[2]).
+%% []''' {@section Thanks} to Ayrnieu for catching a defect in the initial implementation.
+%%
+%% @since Version 471
+
+-spec intersection(List1::list(), List2::list(), IsSorted::sorted|unsorted) -> list().
+
+intersection(List1, List2, unsorted) ->
+
+    intersection(lists:sort(List1), lists:sort(List2), sorted);
+
+
+
+
+
+intersection(List1, List2, sorted) ->
+
+    intersect_walk(List1, List2, []).
+
+
+
+
+
+%% @private
+
+intersect_walk( [], _L2, Work ) ->
+
+    Work;
+
+
+
+
+
+intersect_walk( _L1, [], Work) ->
+
+    Work;
+
+
+
+
+
+intersect_walk( [L1Head|L1Rem], [L2Head|L2Rem], Work)
+
+    when L1Head == L2Head ->
+
+    intersect_walk(L1Rem, L2Rem, [L1Head]++Work);
+
+
+
+
+
+intersect_walk( [L1Head|L1Rem], [L2Head|L2Rem], Work)
+
+    when L1Head < L2Head ->
+
+    intersect_walk(L1Rem, [L2Head|L2Rem], Work);
+
+
+
+
+
+intersect_walk( [L1Head|L1Rem], [L2Head|L2Rem], Work)
+
+    when L1Head > L2Head ->
+
+    intersect_walk( [L1Head|L1Rem], L2Rem, Work).
